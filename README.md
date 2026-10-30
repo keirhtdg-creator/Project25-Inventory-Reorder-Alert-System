@@ -1,97 +1,174 @@
-# Project 25 — Inventory Reorder Alert System
+# Project 25 – Inventory Reorder Alert System
 
-Week 13 implementation using Flutter Web, a Laravel REST API, and MySQL. The project uses fictional sample inventory and does not connect to a real purchasing or notification service.
+## Project Description
 
-## Local setup
+The Inventory Reorder Alert System is a web-based application that monitors inventory levels and helps identify items that need to be reordered.
 
-### 1. Create the MySQL database
+The system provides automated threshold alerts, prevents duplicate reorder requests, monitors aging reorder requests, and generates weekly stock risk summaries.
 
-Start the MySQL 8 service, then create the database using a MySQL account with permission to create databases:
+The application uses Laravel for the backend API and Flutter Web for the frontend interface.
 
-```sql
-CREATE DATABASE inventory_reorder_alerts
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+## Technologies Used
+
+### Backend
+
+* PHP
+* Laravel
+* MySQL / MariaDB
+
+### Frontend
+
+* Flutter
+* Dart
+
+### Database
+
+* MySQL or MariaDB
+
+## Project Structure
+
+```text
+Project25-Inventory-Reorder-Alert-System/
+│
+├── backend/
+│   ├── app/
+│   ├── database/
+│   ├── routes/
+│   ├── tests/
+│   ├── composer.json
+│   └── .env.example
+│
+├── frontend/
+│   ├── lib/
+│   ├── test/
+│   ├── web/
+│   └── pubspec.yaml
+│
+├── documentation/
+│
+├── .gitignore
+└── README.md
 ```
 
-In `backend/.env`, set `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` for your local MySQL instance. Do not commit `.env` or use production credentials.
+## System Requirements
 
-### 2. Start the Laravel API
+Install the following before running the project:
 
-From `backend`:
+* PHP version compatible with the Laravel dependencies
+* Composer
+* MySQL or MariaDB
+* Flutter SDK
+* Dart SDK
+* Google Chrome or another supported browser
 
-```powershell
+## Backend Installation
+
+1. Open a terminal.
+2. Navigate to the backend folder.
+
+```bash
+cd backend
+```
+
+3. Install dependencies.
+
+```bash
 composer install
+```
+
+4. Create your local environment file.
+
+```bash
+copy .env.example .env
+```
+
+5. Generate the Laravel application key.
+
+```bash
 php artisan key:generate
-php artisan migrate --seed
-php artisan serve --host 127.0.0.1 --port 8000
 ```
 
-The seed command creates fictional office/laboratory supplies. The sample toner and gloves begin below their thresholds to demonstrate alerts and recommendations.
+6. Create a local database and configure the database settings in `.env`.
 
-### 3. Start scheduled automation
+7. Run database migrations.
 
-In another terminal, from `backend`:
-
-```powershell
-php artisan schedule:work
+```bash
+php artisan migrate
 ```
 
-The daily aging scan runs at 08:00 Asia/Manila. The weekly summary covers Monday–Sunday and runs Monday at 08:00 Asia/Manila. Keep the scheduler process running to execute these triggers.
+8. Start the Laravel development server.
 
-To capture the recovered-transient-failure demonstration on a fresh reporting week, run this **before** generating that week's summary:
-
-```powershell
-php artisan inventory:weekly-risk --simulate-transient
+```bash
+php artisan serve
 ```
 
-The local-only simulation fails once, retries, and uses an idempotency key so the reporting period has one summary. After that, a regular manual run is safe and returns the existing summary:
+The backend will normally be available at:
 
-```powershell
-php artisan inventory:weekly-risk
+`http://127.0.0.1:8000`
+
+## Frontend Installation
+
+1. Open another terminal.
+2. Navigate to the frontend folder.
+
+```bash
+cd frontend
 ```
 
-The simulation is refused outside local/testing environments.
+3. Install Flutter dependencies.
 
-### 4. Start Flutter Web
-
-From `frontend`:
-
-```powershell
+```bash
 flutter pub get
-flutter run -d web-server --web-hostname 127.0.0.1 --web-port 5000
 ```
 
-Open the URL printed by Flutter. The default API URL is `http://127.0.0.1:8000/api/v1`; override it with:
+4. Start the Flutter Web application.
 
-```powershell
-flutter run -d web-server --web-hostname 127.0.0.1 --web-port 5000 --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
+```bash
+flutter run -d chrome
 ```
 
-## Verify
+Make sure the Laravel backend is running while testing the frontend.
 
-From `frontend`:
+## Testing
 
-```powershell
-flutter analyze
-flutter test
-flutter build web
-```
+### Backend Tests
 
-From `backend`, enable PHP's `pdo_sqlite` extension for the in-memory feature-test database, then run:
+Navigate to the backend folder and run:
 
-```powershell
+```bash
 php artisan test
 ```
 
-The feature tests cover the normal reorder workflow, invalid input, threshold/duplicate decisions, the recovered transient summary failure, permanent aging failure routed to a supervisor manual-action queue, and human resolution.
+### Frontend Analysis
 
-## Scope and limitations
+Navigate to the frontend folder and run:
 
-- Week 13 provides threshold alerts, active-reorder duplicate prevention, seven-day aging escalation, and weekly stock-risk summaries.
-- Week 13 defines unauthorized 401/403 API/UI behavior, but authentication and role enforcement are intentionally deferred to Week 14. Do not expose this prototype outside a trusted local environment.
-- “Demo user” audit labels are placeholders until authentication is implemented; they do not prove a real person's identity.
-- If `INVENTORY_SUPERVISOR_OWNER` is unset, aging automation creates a permanent-failure manual action for a supervisor to assign an owner.
-- The project schema/API were validated against a local MariaDB 10.4 server using Laravel's MySQL driver. The installed MySQL 8 Windows service was stopped; run final deployment checks against the course-approved MySQL version if required.
+```bash
+flutter analyze
+```
 
-See [the requirements checklist](documentation/requirements-checklist.md), [the system architecture](documentation/system-architecture.md), and [the implementation plan](documentation/implementation-plan.md) for the traceable scope and decisions.
+### Frontend Tests
+
+```bash
+flutter test
+```
+
+## Main System Features
+
+* Inventory management
+* Stock-in and stock-out transactions
+* Automated threshold alerts
+* Duplicate reorder prevention
+* Reorder request management
+* Aging reorder escalation
+* Weekly stock risk summaries
+* Manual action management
+* API integration with Flutter Web
+
+## Important Notes
+
+* The `.env` file is not included in the repository.
+* Create your own local `.env` file using `.env.example`.
+* Do not upload database files, passwords, API keys, or other private credentials.
+* Use a separate local database for testing.
+* The project is currently under development.
