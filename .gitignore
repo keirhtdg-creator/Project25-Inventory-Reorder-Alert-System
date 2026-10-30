@@ -1,0 +1,45 @@
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs
+*.log
+backend/storage/logs/*
+
+# Laravel dependencies
+backend/vendor/
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Flutter generated files
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
